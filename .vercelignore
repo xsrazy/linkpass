@@ -1,3 +1,4 @@
 .env.local
 .vercel
 hidden_files/
+linkpass-worker/
