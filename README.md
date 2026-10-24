@@ -79,3 +79,7 @@ If LinkPass is useful to you, you can support it through the Sponsor button on t
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Author
+
+LinkPass is an original project created by Rahmatul Usra ([@xsrazy](https://github.com/xsrazy)). It was built from scratch and is not a fork or a modification of another repository.
