@@ -4,6 +4,8 @@ Free and open source link-in-bio generator with a digital pass concept. Design o
 
 Live demo: https://linkpass.xsrazy.web.id
 
+![LinkPass screenshot](assets/screenshot.png)
+
 ## What it is
 
 LinkPass turns a list of links into a digital pass, like a boarding pass or a backstage card, with a QR stub and a barcode. Instead of sending people a plain list, you share one card that holds your identity and every link that matters.
