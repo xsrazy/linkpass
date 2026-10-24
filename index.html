@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkPass - Link-in-Bio Generator Gratis, Bukan Sekadar Daftar Link</title>
+<meta name="description" content="LinkPass adalah generator link-in-bio gratis dan open source dengan konsep digital pass: rancang kartu identitas digitalmu, atur semua link penting, lalu bagikan satu link untuk semuanya. Tanpa daftar, tanpa bayar.">
+<meta name="keywords" content="link in bio, link-in-bio generator, linktree alternative, bio link gratis, linkpass, kartu digital, satu link untuk semua">
+<meta name="author" content="LinkPass">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://linkpass.xsrazy.web.id/">
+<meta name="theme-color" content="#101014">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LinkPass">
+<meta property="og:title" content="LinkPass - Kartu digital untuk semua linkmu">
+<meta property="og:description" content="Rancang digital pass berisi semua link pentingmu, pilih skin favorit, lalu bagikan satu link. Gratis, tanpa daftar, open source.">
+<meta property="og:url" content="https://linkpass.xsrazy.web.id/">
+<meta property="og:image" content="https://linkpass.xsrazy.web.id/assets/og-image.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LinkPass - Kartu digital untuk semua linkmu">
+<meta name="twitter:description" content="Satu link untuk semua akunmu! Rancang digital pass berisi semua link pentingmu dalam hitungan menit, gratis dan tanpa daftar.">
+<meta name="twitter:image" content="https://linkpass.xsrazy.web.id/assets/og-image.png?v=3">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"LinkPass","applicationCategory":"WebApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free and open source link-in-bio generator with a digital pass concept. Design one card with all your important links and share a single link.","url":"https://linkpass.xsrazy.web.id/"}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#101014; --panel:#17171d; --panel2:#1e1e26; --line:#2b2b35;
+  --ink:#f4f1e8; --muted:#a3a099; --accent:#c8ff3d; --accent2:#ff5c39;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;min-height:100vh;
+  background-image:radial-gradient(#26262f 1px, transparent 1px);background-size:22px 22px}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+::selection{background:var(--accent);color:#101014}
+
+/* ---------- header ---------- */
+header{max-width:1240px;margin:0 auto;padding:26px 22px 6px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo img{width:44px;height:44px}
+.logo .wordmark{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.5px}
+.logo .wordmark em{font-style:normal;color:var(--accent)}
+.badge-free{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;background:var(--accent);color:#101014;padding:5px 10px;border-radius:99px;transform:rotate(-3deg)}
+header nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+header nav a{text-decoration:none;font-size:14px;font-weight:500;color:var(--muted);padding:9px 14px;border:1.5px solid var(--line);border-radius:99px;background:var(--panel)}
+header nav a:hover{color:var(--ink);border-color:var(--accent)}
+
+/* ---------- hero strip ---------- */
+.hero{max-width:1240px;margin:0 auto;padding:20px 22px 4px}
+.hero h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(30px,5vw,54px);line-height:1.16;letter-spacing:-.5px;max-width:820px}
+.hero h1 .hl{background:var(--accent);color:#101014;padding:0 10px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.hero p{color:var(--muted);font-size:17px;max-width:640px;margin-top:14px;line-height:1.55}
+.hero .steps{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.hero .steps span{font-family:'JetBrains Mono',monospace;font-size:12px;border:1.5px dashed #3a3a46;border-radius:99px;padding:7px 13px;color:var(--ink)}
+.hero .steps b{color:var(--accent)}
+
+/* ---------- layout ---------- */
+.app{max-width:1240px;margin:0 auto;padding:26px 22px 70px;display:grid;grid-template-columns:500px 1fr;gap:30px;align-items:start}
+.app>*{min-width:0}
+@media(max-width:1020px){.app{grid-template-columns:1fr}}
+
+/* ---------- editor ---------- */
+.booth{background:var(--panel);border:1.5px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+.booth h2{font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.booth h2 .num{background:var(--accent);color:#101014;font-family:'JetBrains Mono',monospace;font-size:12px;width:24px;height:24px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;transform:rotate(-4deg)}
+.booth h2 .hint{margin-left:auto;font-family:'Space Grotesk';font-weight:400;letter-spacing:0;text-transform:none;font-size:12px;color:var(--muted)}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;color:var(--ink);padding:11px 13px;font-size:15px;outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:64px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.skins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.skin-btn{border:2px solid var(--line);border-radius:14px;padding:10px 8px;background:var(--panel2);color:var(--ink);text-align:left;min-width:0}
+.skin-btn .sw{display:block;height:34px;border-radius:8px;margin-bottom:8px;border:1.5px solid rgba(255,255,255,.15)}
+.skin-btn small{display:block;font-weight:700;font-size:12.5px}
+.skin-btn span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.35}
+.skin-btn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,255,61,.25)}
+.swatches{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.swatch{width:32px;height:32px;border-radius:50%;border:2.5px solid transparent;outline:2px solid var(--line);cursor:pointer}
+.swatch.active{outline-color:var(--ink);transform:scale(1.12)}
+input[type=color].colorpick{width:46px;height:38px;padding:2px;background:var(--panel2);border:1.5px solid var(--line);border-radius:10px}
+.toggles{display:flex;gap:14px;flex-wrap:wrap}
+.tgl{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
+.tgl input{accent-color:#8ec400;width:18px;height:18px}
+.linkrow{background:var(--panel2);border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.linkrow .top{display:flex;gap:8px;align-items:center}
+.linkrow .ico{width:44px;text-align:center;font-size:17px}
+.linkrow .icprev{width:40px;height:40px;flex:none;border-radius:12px;background:#1b1b22;border:1.5px solid #34343f;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink)}
+.linkrow .icprev img{width:22px;height:22px;display:block}
+.linkrow .icprev .icletter{font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;color:var(--accent)}
+.linkrow .ttl{flex:1}
+.linkrow input,.linkrow textarea{background:#26262f;border:1.5px solid #34343f;border-radius:9px;color:var(--ink);padding:8px 10px;font-size:14px;width:100%;outline:none}
+.linkrow input:focus{border-color:var(--accent)}
+.linkrow .url{margin-top:8px}
+.linkrow .note{margin-top:8px}
+.linkrow .rowbtns{display:flex;gap:6px;margin-top:9px;align-items:center}
+.mini{border:1.5px solid var(--line);background:#26262f;color:var(--ink);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700}
+.mini:hover{border-color:var(--accent)}
+.mini.danger:hover{border-color:var(--accent2);color:var(--accent2)}
+.hotbox{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.hotbox input{accent-color:#ff5c39;width:16px;height:16px}
+.addbtn{width:100%;border:2px dashed #3a3a46;background:transparent;color:var(--ink);border-radius:14px;padding:13px;font-weight:700;font-size:15px}
+.addbtn:hover{border-color:var(--accent);color:var(--accent)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border-radius:13px;padding:13px 18px;font-weight:700;font-size:15px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#101014}
+.btn.primary:hover{background:#d8ff70}
+.btn.hot{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.sharebox{display:flex;gap:8px}
+.sharebox input{flex:1;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;color:var(--muted);padding:11px 13px;font-size:13px;font-family:'JetBrains Mono',monospace;min-width:0}
+.meterwrap{background:var(--panel2);border-radius:99px;height:12px;overflow:hidden;border:1.5px solid var(--line)}
+.meter{height:100%;background:repeating-linear-gradient(45deg,var(--accent) 0 10px,#a8dd2a 10px 20px);width:0%;transition:width .4s}
+.statsline{display:flex;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);margin-top:10px}
+.statsline b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#101014;font-weight:700;padding:12px 22px;border-radius:99px;z-index:60;transition:transform .3s;box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast button{margin-left:12px;background:#101014;color:var(--accent);border:none;border-radius:99px;padding:5px 14px;font-weight:700;font-family:inherit;cursor:pointer}
+
+/* ---------- font picker + avatar ---------- */
+.fonts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.font-btn{border:2px solid var(--line);border-radius:14px;padding:10px 8px;background:var(--panel2);color:var(--ink);text-align:left;min-width:0}
+.font-btn .fp{display:block;font-size:19px;line-height:1.15;margin-bottom:5px;white-space:nowrap;overflow:hidden}
+.font-btn small{display:block;font-weight:700;font-size:12.5px;font-family:'Space Grotesk',sans-serif}
+.font-btn span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.35;font-family:'Space Grotesk',sans-serif}
+.font-btn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,255,61,.25)}
+.avatarctl{display:flex;gap:14px;align-items:flex-start}
+.avatarprev{width:74px;height:74px;flex:none;border-radius:22px;background:var(--panel2);border:2px dashed #3a3a46;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:900;font-size:24px;color:var(--muted);overflow:hidden}
+.avatarprev img{width:100%;height:100%;object-fit:cover}
+.avatarbtns{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.avatarmeta{font-size:12.5px;color:var(--muted);line-height:1.5;max-width:280px}
+.avatarmeta button{margin-top:4px}
+.finenote{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:8px}
+.editor.dragging{outline:2.5px dashed var(--accent);outline-offset:-8px;border-radius:18px}
+.cropwrap{position:fixed;inset:0;background:rgba(6,6,10,.78);z-index:80;display:flex;align-items:center;justify-content:center;padding:18px}
+.cropwrap[hidden]{display:none}
+.cropbox{background:var(--panel);border:1.5px solid var(--line);border-radius:20px;padding:22px;max-width:360px;width:100%}
+.cropbox h3{font-family:'Archivo',sans-serif;font-weight:900;font-size:19px;margin-bottom:14px}
+.cropstage{width:280px;height:280px;max-width:100%;margin:0 auto;border-radius:16px;overflow:hidden;position:relative;background:#000;touch-action:none;cursor:grab}
+.cropstage img{position:absolute;left:50%;top:50%;max-width:none;user-select:none;-webkit-user-drag:none}
+.cropctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+.cropctl label{flex:1;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.cropctl input[type=range]{flex:1;accent-color:var(--accent)}
+
+/* ---------- stage / pass ---------- */
+.stage{position:sticky;top:18px}
+@media(max-width:1020px){.stage{position:static}}
+.stage .caption{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stage .caption b{color:var(--accent)}
+.passscene{display:flex;justify-content:center;padding:34px 10px 40px;background:radial-gradient(600px 300px at 50% 0%,rgba(200,255,61,.09),transparent 70%)}
+.pass{--accent:#c8ff3d;--pass-bg:#17171d;--pass-ink:#f4f1e8;--pass-muted:#a3a099;--pass-chip:#232329;--pass-line:#33333d;
+  --font-display:'Archivo',sans-serif;--font-body:'Space Grotesk',sans-serif;font-family:var(--font-body);
+  width:min(460px,94vw);background:var(--pass-bg);color:var(--pass-ink);border-radius:26px;display:flex;flex-wrap:wrap;overflow:hidden;
+  box-shadow:0 34px 70px rgba(0,0,0,.55),0 0 0 1.5px var(--pass-line);transform:rotate(-1.4deg);transition:transform .3s}
+.pass:hover{transform:rotate(0deg)}
+.pass-main{flex:1;padding:26px 24px 22px;min-width:0}
+.pass-stub{width:104px;flex:none;border-left:2.5px dashed var(--pass-line);padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;background:color-mix(in srgb,var(--pass-chip) 55%,transparent)}
+@media(max-width:460px){.pass{flex-direction:column;flex-wrap:nowrap}.pass-barcode{flex:none}.pass-stub{width:auto;border-left:none;border-top:2.5px dashed var(--pass-line);flex-direction:row;justify-content:space-between}}
+.pass-top{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;color:var(--pass-muted);text-transform:uppercase}
+.pass-top .live{display:flex;align-items:center;gap:6px}
+.pass-top .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.avatarwrap{display:flex;gap:15px;align-items:center;margin:20px 0 6px}
+.avatar{width:74px;height:74px;border-radius:22px;flex:none;position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:26px;background:var(--accent);color:#101014;overflow:hidden;border:2.5px solid var(--pass-line);transform:rotate(-3deg)}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pname{font-family:var(--font-display);font-weight:900;font-size:29px;line-height:1.05;letter-spacing:-.4px;overflow-wrap:anywhere}
+.avatarwrap>div{min-width:0}
+.puser{color:var(--accent);font-weight:700;font-size:15px;margin-top:3px;overflow-wrap:anywhere}
+.prole{font-size:13.5px;color:var(--pass-muted);margin-top:2px;overflow-wrap:anywhere}
+.pbio{font-size:15px;line-height:1.55;margin:13px 0 4px;overflow-wrap:anywhere}
+.ploc{font-size:13px;color:var(--pass-muted);overflow-wrap:anywhere}
+.pstats{display:flex;gap:9px;margin:16px 0 4px;flex-wrap:wrap}
+.pstat{background:var(--pass-chip);border:1.5px solid var(--pass-line);border-radius:12px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11.5px}
+.pstat b{display:block;font-size:16px;font-weight:700}
+.plinks{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.plink{display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--pass-chip);border:1.8px solid var(--pass-line);border-radius:16px;padding:12px 14px;color:var(--pass-ink);transition:transform .15s,border-color .15s}
+.plink:hover{transform:translateX(4px);border-color:var(--accent)}
+.plink .ic{width:40px;height:40px;flex:none;border-radius:12px;background:var(--pass-bg);border:1.5px solid var(--pass-line);display:flex;align-items:center;justify-content:center;font-size:18px}
+.plink .ic img{width:22px;height:22px;display:block}
+.plink .ic .icletter{font-family:var(--font-display);font-weight:900;font-size:17px;color:var(--accent)}
+.plink>span{min-width:0}
+.plink .tt{font-weight:700;font-size:15.5px;line-height:1.2;overflow-wrap:anywhere}
+.plink .nn{font-size:12.5px;color:var(--pass-muted);margin-top:1px;overflow-wrap:anywhere}
+.plink .go{margin-left:auto;font-weight:900;color:var(--accent);font-size:17px}
+.hotflag{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;background:var(--accent2);color:#fff;border-radius:6px;padding:2.5px 6px;letter-spacing:.6px;vertical-align:2px;margin-left:7px}
+.pass-foot{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--pass-muted);letter-spacing:1px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.stub-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--pass-muted);text-transform:uppercase;writing-mode:vertical-rl}
+@media(max-width:460px){.stub-label{writing-mode:horizontal-tb}}
+.qrbox{background:#fff;border-radius:12px;padding:6px;line-height:0}
+.qrbox img{width:74px;height:74px}
+.pass-barcode{order:3;flex:0 0 100%;border-top:2.5px dashed var(--pass-line);padding:14px 22px 16px;color:var(--pass-ink);line-height:0}
+.pass-barcode svg{width:100%;height:50px;display:block}
+.stubnum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--pass-muted);letter-spacing:1px;text-align:center;word-break:break-all}
+.hole{width:22px;height:22px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px var(--pass-line)}
+
+/* font packs: pilihan font hanya untuk teks manusia; teks mesin tetap JetBrains Mono */
+.pass[data-font="jakarta"]{--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif}
+.pass[data-font="bebas"]{--font-display:'Bebas Neue',sans-serif;--font-body:'Space Grotesk',sans-serif}
+.pass[data-font="bebas"] .pname{font-size:33px;letter-spacing:1px;font-weight:400}
+.pass[data-font="playfair"]{--font-display:'Playfair Display',serif;--font-body:'Space Grotesk',sans-serif}
+.pass[data-font="playfair"] .pname{font-weight:800}
+.pass[data-font="mono"]{--font-display:'JetBrains Mono',monospace;--font-body:'JetBrains Mono',monospace}
+.pass[data-font="caveat"]{--font-display:'Caveat',cursive;--font-body:'Space Grotesk',sans-serif}
+.pass[data-font="caveat"] .pname{font-size:38px;font-weight:700}
+
+/* skins */
+.pass[data-skin="boarding"]{--pass-bg:#f6f1e3;--pass-ink:#182540;--pass-muted:#5d6b84;--pass-chip:#fffdf4;--pass-line:#c9bfa5}
+.pass[data-skin="vinyl"]{--pass-bg:linear-gradient(165deg,#33190d,#5c2d13 60%,#7a3c17);--pass-ink:#ffe7cb;--pass-muted:#e7bb92;--pass-chip:rgba(0,0,0,.30);--pass-line:#8a4d22}
+.pass[data-skin="arcade"]{--pass-bg:#0d0621;--pass-ink:#eaf7ff;--pass-muted:#9db4d8;--pass-chip:#1a0f38;--pass-line:#3a2a7a}
+.pass[data-skin="receipt"]{--pass-bg:#fbfbf5;--pass-ink:#141414;--pass-muted:#6d6d63;--pass-chip:#ffffff;--pass-line:#d8d8cc}
+.pass[data-skin="receipt"] .pname,.pass[data-skin="receipt"] .avatar{font-family:'JetBrains Mono',monospace}
+.pass[data-skin="botanical"]{--pass-bg:#edf3e2;--pass-ink:#22351e;--pass-muted:#5d6f52;--pass-chip:#fbfdf4;--pass-line:#c3d2ab}
+.pass[data-skin="ktp"]{--pass-bg:linear-gradient(160deg,#d7e9fa,#aecdf1);--pass-ink:#14315c;--pass-muted:#35537c;--pass-chip:#eef5fd;--pass-line:#7ea6d4}
+.pass[data-skin="paspor"]{--pass-bg:linear-gradient(165deg,#0f1e3a,#1c3465);--pass-ink:#f3e9cf;--pass-muted:#c2b184;--pass-chip:#22355e;--pass-line:#a5853f}
+.pass[data-skin="bioskop"]{--pass-bg:linear-gradient(165deg,#150607,#2c0d11);--pass-ink:#f7ead9;--pass-muted:#c4a184;--pass-chip:#331216;--pass-line:#6e2a2a}
+
+footer{max-width:1240px;margin:0 auto;padding:0 22px 46px;color:var(--muted);font-size:14.5px;line-height:1.65}
+footer b{color:var(--ink)}
+body.public header,body.public .hero,body.public .app,body.public footer{display:none}
+#publicRoot{display:none}
+body.public #publicRoot{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:34px 14px;flex-direction:column;gap:20px}
+.madewith{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.5px}
+.madewith a{color:var(--accent);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">
+    <img src="/assets/logo.svg" alt="Logo LinkPass">
+    <span class="wordmark">Link<em>Pass</em></span>
+  </a>
+  <span class="badge-free">100% GRATIS</span>
+  <nav>
+    <a href="#builder">Builder</a>
+    <a href="#bagikan">Bagikan</a>
+    <a href="#tentang">Tentang</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Link-in-bio itu membosankan. Punyamu berbentuk <span class="hl">digital pass.</span></h1>
+  <p>LinkPass mengubah daftar link biasa menjadi kartu digital: ada foto, bio, statistik, QR, sampai barcode. Rancang sekali, bagikan satu link ke mana saja. Tanpa daftar, tanpa bayar, datamu tersimpan di browsermu sendiri.</p>
+  <div class="steps">
+    <span><b>01</b> Isi profil</span>
+    <span><b>02</b> Pilih skin pass</span>
+    <span><b>03</b> Susun link</span>
+    <span><b>04</b> Bagikan satu link</span>
+  </div>
+</section>
+
+<main class="app" id="builder">
+  <div class="editor">
+    <section class="booth">
+      <h2><span class="num">1</span> Identitas pass <span class="hint">yang tampil paling atas</span></h2>
+      <div class="field"><label for="f-name">Nama tampil</label><input id="f-name" type="text" maxlength="40" placeholder="Nama kamu"></div>
+      <div class="grid2">
+        <div class="field"><label for="f-username">Username</label><input id="f-username" type="text" maxlength="24" placeholder="@username"></div>
+        <div class="field"><label for="f-role">Label / profesi</label><input id="f-role" type="text" maxlength="40" placeholder="Content Creator"></div>
+      </div>
+      <div class="field"><label for="f-bio">Bio singkat</label><textarea id="f-bio" maxlength="180" placeholder="Satu-dua kalimat yang bikin orang penasaran..."></textarea></div>
+      <div class="grid2">
+        <div class="field"><label for="f-location">Lokasi</label><input id="f-location" type="text" maxlength="40" placeholder="Jakarta, Indonesia"></div>
+        <div class="field"><label>Foto profil</label>
+          <div class="avatarctl">
+            <div class="avatarprev" id="avatarPrev">LP</div>
+            <div class="avatarbtns">
+              <button class="mini" id="avatarUploadBtn" type="button">Upload foto</button>
+              <button class="mini danger" id="avatarRemoveBtn" type="button" hidden>Hapus</button>
+              <div class="avatarmeta" id="avatarMeta"></div>
+            </div>
+            <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+          </div>
+          <label class="tgl" style="margin-top:10px"><input type="checkbox" id="t-sharephoto" checked> Sertakan foto di link share</label>
+          <p class="finenote">Format JPG, PNG, atau WebP. Foto dipotong persegi dan dikompres otomatis. Di komputer, kamu juga bisa menarik file foto ke panel editor atau menempel dari clipboard.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="booth">
+      <h2><span class="num">2</span> Skin &amp; warna <span class="hint">bukan template polos</span></h2>
+      <div class="field"><label>Skin pass</label><div class="skins" id="skinGrid"></div></div>
+      <div class="field"><label>Font pass</label><div class="fonts" id="fontGrid"></div></div>
+      <div class="field"><label>Warna aksen</label>
+        <div class="swatches" id="accentSwatches"></div>
+      </div>
+      <div class="field"><label>Tampilan pass</label>
+        <div class="toggles">
+          <label class="tgl"><input type="checkbox" id="t-stats" checked> Statistik</label>
+          <label class="tgl"><input type="checkbox" id="t-stub" checked> Stub QR + barcode</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="booth">
+      <h2><span class="num">3</span> Susun link <span class="hint">urut dari paling penting</span></h2>
+      <div id="linkRows"></div>
+      <button class="addbtn" id="addLink" type="button">+ Tambah link</button>
+      <div style="height:14px"></div>
+      <div class="grid2">
+        <div class="field" style="margin:0"><label for="presetSel">Mulai dari contoh isi</label>
+          <select id="presetSel">
+            <option value="creator">Kreator konten</option>
+            <option value="seller">Toko online</option>
+            <option value="musician">Musisi</option>
+            <option value="photographer">Fotografer</option>
+            <option value="affiliate">Affiliate</option>
+            <option value="streamer">Streamer</option>
+            <option value="jaslokal">Jasa lokal</option>
+            <option value="portofolio">Portofolio</option>
+          </select>
+        </div>
+        <div class="field" style="margin:0"><label>&nbsp;</label>
+          <div class="actions">
+            <button class="btn" id="applyPreset" type="button">Pakai contoh</button>
+            <button class="btn" id="shuffleBtn" type="button">Acak vibe</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booth" id="bagikan">
+      <h2><span class="num">4</span> Bagikan <span class="hint">satu link untuk semua</span></h2>
+      <div class="field"><label>Link pass kamu</label>
+        <div class="sharebox"><input id="shareUrl" type="text" readonly><button class="btn primary" id="copyShare" type="button">Salin</button></div>
+        <div class="avatarmeta" id="shareMeta" style="margin-top:8px"></div>
+      </div>
+      <div class="field"><label for="shortEmail">Email pemulihan short link (opsional)</label><input id="shortEmail" type="email" placeholder="email@contoh.com" style="width:100%;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;color:var(--ink);padding:11px 13px;font-size:14px">
+        <div class="avatarmeta" style="margin-top:6px">Email ini hanya dipakai untuk memverifikasi permintaan link kelola baru. LinkPass tidak mengirim email otomatis di versi ini.</div></div>
+      <div class="actions">
+        <button class="btn primary" id="saveShortBtn" type="button">Simpan sebagai short link</button>
+        <button class="btn" id="openPublic" type="button">Buka tampilan publik</button>
+        <button class="btn" id="downloadHtml" type="button">Unduh HTML</button>
+        <button class="btn" id="exportJson" type="button">Ekspor JSON</button>
+        <button class="btn" id="importBtn" type="button">Impor JSON</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+      <div id="shortBox" hidden style="margin-top:16px;border:1.5px solid var(--line);border-radius:14px;padding:14px">
+        <div class="field"><label>Short link publik</label>
+          <div class="sharebox"><input id="shortPublic" type="text" readonly><button class="btn primary" id="copyShortPublic" type="button">Salin</button></div></div>
+        <div class="field" style="margin-top:10px"><label>Link kelola rahasia</label>
+          <div class="sharebox"><input id="shortManage" type="text" readonly><button class="btn primary" id="copyShortManage" type="button">Salin</button></div>
+          <div class="avatarmeta" style="margin-top:8px">Simpan link kelola ini baik-baik. Link ini satu-satunya kunci untuk mengedit pass, melihat statistik, dan menghapus pass. LinkPass tidak bisa menampilkan link ini lagi setelah kotak ini ditutup.</div></div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn" id="downloadAccessCard" type="button">Unduh kartu akses</button>
+          <button class="btn" id="closeShortBox" type="button">Tutup</button>
+        </div>
+      </div>
+      <div id="serverNotice" hidden style="margin-top:16px;border:1.5px solid var(--line);border-radius:14px;padding:14px">
+        <div class="avatarmeta" id="serverNoticeText"></div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn" id="updateShortBtn" type="button">Perbarui short link</button>
+          <button class="btn" id="openManageBtn" type="button">Buka halaman kelola</button>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+      <div class="field" style="margin:0"><label>Kekuatan pass</label>
+        <div class="meterwrap"><div class="meter" id="meter"></div></div>
+        <div class="statsline"><span>Link: <b id="statLinks">0</b></span><span>Link unggulan: <b id="statHot">0</b></span><span>Profil lengkap: <b id="statPower">0%</b></span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="stage">
+    <div class="caption"><span>Pratinjau langsung</span><span id="capUser">@username</span></div>
+    <div class="passscene"><div id="previewRoot"></div></div>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:520px">Pass di kanan berubah langsung saat kamu mengedit. Link bagikan di panel 4 berisi seluruh datamu yang terenkode di URL, jadi tidak ada server yang menyimpan profilmu. Siapa pun yang membuka link itu melihat pass persis seperti ini.</p>
+  </div>
+</main>
+
+<footer id="tentang">
+  <p><b>LinkPass</b> adalah generator link-in-bio gratis dan open source dengan konsep digital pass. Alternatif ringan untuk layanan link-in-bio berbayar: tanpa langganan, tanpa watermark, tanpa batas jumlah link. Semua data tersimpan lokal di browser dan di dalam link yang kamu bagikan.</p>
+</footer>
+
+<div id="publicRoot"></div>
+<div class="toast" id="toast">Tersalin</div>
+
+<div class="cropwrap" id="cropWrap" hidden>
+  <div class="cropbox">
+    <h3>Potong foto</h3>
+    <div class="cropstage" id="cropStage"><img id="cropImg" alt="Foto yang akan dipotong"></div>
+    <div class="cropctl">
+      <label>Zoom <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1"></label>
+      <button class="mini" id="cropRotate" type="button">Putar 90°</button>
+      <button class="mini" id="cropReset" type="button">Reset</button>
+    </div>
+    <p class="finenote">Geser foto untuk mengatur posisi. Hasilnya disimpan sebagai persegi 192×192 yang sudah dikompres.</p>
+    <div style="height:14px"></div>
+    <div class="actions">
+      <button class="btn primary" id="cropApply" type="button">Pakai foto</button>
+      <button class="btn" id="cropCancel" type="button">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normUrl=u=>{u=String(u||'').trim();if(!u)return '#';return /^(https?:|mailto:|tel:)/i.test(u)?u:'https://'+u;};
+const clone=o=>JSON.parse(JSON.stringify(o));
+const KEY='linkpass_state_v1';
+const API_URL='https://linkpass-api.fleursmeron-id.workers.dev';
+
+const SKINS=[
+ {id:'backstage',name:'Backstage',desc:'Gelap neon, siap manggung',css:'linear-gradient(135deg,#17171d,#26262f)'},
+ {id:'boarding',name:'Boarding Pass',desc:'Kertas tiket, rapi, siap terbang',css:'linear-gradient(135deg,#f6f1e3,#e7dcbf)'},
+ {id:'vinyl',name:'Vinyl Sunset',desc:'Hangat retro ala piringan hitam',css:'linear-gradient(135deg,#5c2d13,#7a3c17)'},
+ {id:'arcade',name:'Arcade',desc:'Ungu neon, energi game 90an',css:'linear-gradient(135deg,#1a0f38,#3a2a7a)'},
+ {id:'receipt',name:'Struk Belanja',desc:'Mono, jujur, anti ribet',css:'linear-gradient(135deg,#fbfbf5,#eaead9)'},
+ {id:'botanical',name:'Botanical',desc:'Sage lembut, adem, estetik',css:'linear-gradient(135deg,#edf3e2,#d3e2ba)'},
+ {id:'ktp',name:'KTP',desc:'Biru muda ala kartu identitas',css:'linear-gradient(135deg,#d7e9fa,#aecdf1)'},
+ {id:'paspor',name:'Paspor',desc:'Navy tua dengan aksen emas',css:'linear-gradient(135deg,#0f1e3a,#1c3465)'},
+ {id:'bioskop',name:'Bioskop',desc:'Marun gelap ala layar lebar',css:'linear-gradient(135deg,#150607,#2c0d11)'}
+];
+const ACCENTS=['#c8ff3d','#ff3df0','#38c6ff','#3dffb0','#8a7aff','#ffd6e8','#bde0fe','#fff0b3','#ffb03d','#ff5c39','#bc6c25','#606c38','#f4f1e8','#ced4da','#6c757d','#212529'];
+const FONTS=[
+ {id:'archivo',name:'Archivo',desc:'Tegas dan modern',fam:"'Archivo',sans-serif",gf:'family=Archivo:wght@700;900&family=Space+Grotesk:wght@400;500;700'},
+ {id:'jakarta',name:'Plus Jakarta Sans',desc:'Bersih dan kekinian',fam:"'Plus Jakarta Sans',sans-serif",gf:'family=Plus+Jakarta+Sans:wght@400;700'},
+ {id:'bebas',name:'Bebas Neue',desc:'Gaya poster dan banner',fam:"'Bebas Neue',sans-serif",gf:'family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700'},
+ {id:'playfair',name:'Playfair Display',desc:'Elegan dan premium',fam:"'Playfair Display',serif",gf:'family=Playfair+Display:wght@700;800&family=Space+Grotesk:wght@400;500;700'},
+ {id:'mono',name:'JetBrains Mono',desc:'Retro terminal',fam:"'JetBrains Mono',monospace",gf:'family=JetBrains+Mono:wght@500;700'},
+ {id:'caveat',name:'Caveat',desc:'Tulisan tangan, santai',fam:"'Caveat',cursive",gf:'family=Caveat:wght@600;700&family=Space+Grotesk:wght@400;500;700'}
+];
+
+const DEFAULT={
+ name:'Ara Zahra',username:'@arazahra',role:'Content Creator & Storyteller',
+ bio:'Bikin konten soal kota, kopi, dan hal-hal kecil yang sering kelewat. Semua karyaku kumpul di pass ini.',
+ location:'Bandung, Indonesia',avatar:'',accent:'#c8ff3d',skin:'backstage',font:'archivo',sharePhoto:true,stats:true,stub:true,
+ links:[
+  {icon:'',title:'Video Terbaru',url:'https://youtube.com',note:'Tonton yang paling baru',hot:true},
+  {icon:'',title:'Toko & Produk Digital',url:'https://shopee.co.id',note:'Template, preset, dan printables',hot:true},
+  {icon:'',title:'Instagram',url:'https://instagram.com',note:'Foto dan cerita harian',hot:false},
+  {icon:'',title:'TikTok',url:'https://tiktok.com',note:'Versi pendek dan seru-seruan',hot:false},
+  {icon:'',title:'Kerja Sama / Endorse',url:'mailto:halo@example.com',note:'Balas maksimal 1x24 jam',hot:false}
+ ]};
+
+const PRESETS={
+ creator:clone(DEFAULT),
+ seller:{name:'Dapur Rempah Bu Tia',username:'@dapurtia',role:'Toko Online • Rempah & Sambal',bio:'Rempah pilihan dan sambal rumahan, dikirim segar tiap hari dari dapur kami. Klik, pesan, langsung meluncur.',location:'Yogyakarta, Indonesia',avatar:'',accent:'#ff5c39',skin:'receipt',font:'mono',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'Pesan via WhatsApp',url:'https://wa.me/6281200000000',note:'Fast respon 08.00-20.00',hot:true},
+  {icon:'',title:'Shopee',url:'https://shopee.co.id',note:'Gratis ongkir tiap hari',hot:true},
+  {icon:'',title:'Tokopedia',url:'https://tokopedia.com',note:'Official store',hot:false},
+  {icon:'',title:'Testimoni Pembeli',url:'https://instagram.com',note:'4.9 dari 2.300+ ulasan',hot:false},
+  {icon:'',title:'Alamat & Jam Buka',url:'https://maps.google.com',note:'Dine in dan take away',hot:false}]},
+ musician:{name:'SENJA KALA',username:'@senjakala',role:'Band Indie • Jakarta',bio:'Lagu-lagu tentang pulang, hujan, dan kota yang tidak pernah tidur. Album kedua sudah rilis, dengarkan di bawah.',location:'Jakarta, Indonesia',avatar:'',accent:'#ffb03d',skin:'vinyl',font:'bebas',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'Dengarkan di Spotify',url:'https://open.spotify.com',note:'Album: Pulang Paling Lambat',hot:true},
+  {icon:'',title:'Video Live Terbaru',url:'https://youtube.com',note:'Live at Gudang Selatan',hot:true},
+  {icon:'🎫',title:'Jadwal Tur 2026',url:'https://example.com/tur',note:'12 kota, tiket sudah dibuka',hot:false},
+  {icon:'',title:'Merch Resmi',url:'https://shopee.co.id',note:'Kaos, totebag, dan kaset',hot:false},
+  {icon:'',title:'Booking & Media',url:'mailto:booking@example.com',note:'Untuk event dan festival',hot:false}]},
+ photographer:{name:'Raka Pradana',username:'@rakalens',role:'Fotografer Pernikahan',bio:'Mengabadikan hari bahagia dengan gaya hangat dan jujur. Berbasis di Semarang, siap terbang ke kotamu.',location:'Semarang, Indonesia',avatar:'',accent:'#3dffb0',skin:'botanical',font:'playfair',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'🖼️',title:'Portfolio Pilihan',url:'https://example.com/portfolio',note:'120+ pernikahan terdokumentasi',hot:true},
+  {icon:'💰',title:'Paket & Harga',url:'https://example.com/paket',note:'Mulai dari Rp 3,5 juta',hot:true},
+  {icon:'',title:'Cek Tanggal Kosong',url:'https://wa.me/6281200000000',note:'Balas di hari yang sama',hot:false},
+  {icon:'',title:'Instagram',url:'https://instagram.com',note:'Update tiap minggu',hot:false},
+  {icon:'💌',title:'Kata Mereka',url:'https://example.com/testimoni',note:'Cerita dari para klien',hot:false}]},
+ affiliate:{name:'Dewi Lestari',username:'@dewipicks',role:'Affiliate • Racun Shopee dan TikTok Shop',bio:'Racun harian yang beneran kupakai sendiri: skincare, dapur, sampai printilan kamar. Cek sebelum kehabisan.',location:'Surabaya, Indonesia',avatar:'',accent:'#ff3df0',skin:'ktp',font:'jakarta',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'Shopee Picks',url:'https://shopee.co.id',note:'Keranjang orens andalanku',hot:true},
+  {icon:'',title:'TikTok Shop',url:'https://www.tiktok.com',note:'Live tiap Selasa dan Jumat',hot:true},
+  {icon:'',title:'Tokopedia',url:'https://tokopedia.com',note:'Alternatif bebas ongkir',hot:false},
+  {icon:'',title:'Grup WhatsApp Racun',url:'https://wa.me/6281200000000',note:'Info flash sale duluan di sini',hot:false},
+  {icon:'🛍️',title:'Katalog Racun Minggu Ini',url:'https://example.com/katalog',note:'Diperbarui tiap Senin',hot:false}]},
+ streamer:{name:'Bayu Mahesa',username:'@bayumain',role:'Streamer • FPS dan Game Horor',bio:'Live tiap malam jam 20.00 WIB. Mabar santai, ranked serius, jump scare sudah biasa.',location:'Jakarta, Indonesia',avatar:'',accent:'#8a7aff',skin:'arcade',font:'bebas',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'YouTube',url:'https://youtube.com',note:'Full stream dan highlight',hot:true},
+  {icon:'',title:'Twitch',url:'https://twitch.tv',note:'Live utama di sini',hot:true},
+  {icon:'',title:'Discord',url:'https://discord.com',note:'Ngumpul dan mabar bareng',hot:false},
+  {icon:'',title:'TikTok',url:'https://tiktok.com',note:'Klip lucu dan jump scare',hot:false},
+  {icon:'',title:'Saweria',url:'https://saweria.co',note:'Dukung dan request game',hot:false}]},
+ jaslokal:{name:'Barber Bro',username:'@barberbro',role:'Barbershop • Walk-in dan Booking',bio:'Potong rapi tanpa antre lama. Booking lewat WhatsApp, datang tinggal duduk.',location:'Depok, Jawa Barat',avatar:'',accent:'#bc6c25',skin:'bioskop',font:'jakarta',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'Booking via WhatsApp',url:'https://wa.me/6281200000000',note:'Balas cepat 09.00-21.00',hot:true},
+  {icon:'',title:'Lokasi di Google Maps',url:'https://maps.google.com',note:'Parkir motor dan mobil ada',hot:true},
+  {icon:'',title:'Instagram',url:'https://instagram.com',note:'Hasil potongan terbaru',hot:false},
+  {icon:'💈',title:'Daftar Harga',url:'https://example.com/harga',note:'Mulai Rp 35 ribu',hot:false},
+  {icon:'',title:'TikTok',url:'https://tiktok.com',note:'Before after tiap minggu',hot:false}]},
+ portofolio:{name:'Sinta Maharani',username:'@sintadesain',role:'Desainer Grafis dan Ilustrator',bio:'Branding, kemasan, dan ilustrasi editorial untuk UMKM sampai startup. Slot proyek bulan ini masih ada dua.',location:'Yogyakarta, Indonesia',avatar:'',accent:'#ffb03d',skin:'paspor',font:'playfair',sharePhoto:true,stats:true,stub:true,links:[
+  {icon:'',title:'Behance',url:'https://behance.net',note:'Portofolio branding lengkap',hot:true},
+  {icon:'',title:'Dribbble',url:'https://dribbble.com',note:'Eksplorasi visual terbaru',hot:true},
+  {icon:'',title:'Instagram',url:'https://instagram.com',note:'Proses di balik layar',hot:false},
+  {icon:'',title:'LinkedIn',url:'https://linkedin.com',note:'Profil dan pengalaman kerja',hot:false},
+  {icon:'',title:'Email Proyek',url:'mailto:halo@example.com',note:'Balas maksimal 1x24 jam',hot:false}]}
+};
+
+const HEXRE=/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+function sanitizeState(raw){
+ const fb=clone(DEFAULT),out=clone(DEFAULT);
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+ const s=(v,f)=>typeof v==='string'?v:f;
+ out.name=s(raw.name,fb.name);out.username=s(raw.username,fb.username);out.role=s(raw.role,fb.role);
+ out.bio=s(raw.bio,fb.bio);out.location=s(raw.location,fb.location);out.avatar=s(raw.avatar,'');
+ out.accent=(typeof raw.accent==='string'&&HEXRE.test(raw.accent))?raw.accent:fb.accent;
+ out.skin=SKINS.some(x=>x.id===raw.skin)?raw.skin:fb.skin;
+ out.font=FONTS.some(x=>x.id===raw.font)?raw.font:fb.font;
+ out.sharePhoto=typeof raw.sharePhoto==='boolean'?raw.sharePhoto:fb.sharePhoto;
+ out.stats=typeof raw.stats==='boolean'?raw.stats:fb.stats;
+ out.stub=typeof raw.stub==='boolean'?raw.stub:fb.stub;
+ if(Array.isArray(raw.links)){
+  out.links=raw.links.filter(l=>l&&typeof l==='object'&&!Array.isArray(l)).map(l=>({
+   icon:typeof l.icon==='string'?l.icon:'',title:typeof l.title==='string'?l.title:'',
+   note:typeof l.note==='string'?l.note:'',url:typeof l.url==='string'?l.url:'',hot:!!l.hot}));
+ }
+ return out;
+}
+function isImportable(d){
+ if(!d||typeof d!=='object'||Array.isArray(d))return false;
+ for(const k of ['name','username','role','bio','location','avatar','accent','skin','font'])if(d[k]!==undefined&&typeof d[k]!=='string')return false;
+ for(const k of ['sharePhoto','stats','stub'])if(d[k]!==undefined&&typeof d[k]!=='boolean')return false;
+ if(!Array.isArray(d.links))return false;
+ for(const l of d.links){
+  if(!l||typeof l!=='object'||Array.isArray(l))return false;
+  for(const k of ['icon','title','note','url'])if(l[k]!==undefined&&typeof l[k]!=='string')return false;
+  if(l.hot!==undefined&&typeof l.hot!=='boolean')return false;
+ }
+ return true;
+}
+let state=load()||clone(DEFAULT);
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));return s?sanitizeState(s):null;}catch(e){return null;}}
+let saveWarned=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));saveWarned=false;}catch(e){if(!saveWarned){saveWarned=true;toast('Gagal menyimpan: penyimpanan browser penuh. Perubahan tidak tersimpan, ekspor JSON untuk cadangan.');}}}
+function initials(n){const w=String(n||'').trim().split(/\s+/).filter(Boolean);if(!w.length)return 'LP';const f=[...w[0]];if(w.length===1)return f.slice(0,2).join('').toUpperCase();return (f[0]+[...w[w.length-1]][0]).toUpperCase();}
+const FONT_LAZY={jakarta:'family=Plus+Jakarta+Sans:wght@400;700',bebas:'family=Bebas+Neue',playfair:'family=Playfair+Display:wght@700;800',caveat:'family=Caveat:wght@600;700'};
+const fontsLoaded=new Set();
+function ensureFont(id){if(!FONT_LAZY[id]||fontsLoaded.has(id))return;fontsLoaded.add(id);const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?'+FONT_LAZY[id]+'&display=swap';document.head.appendChild(l);}
+function stubNum(u){let h=0;const s=String(u||'linkpass');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return String(h).padStart(10,'0').slice(0,10);}
+function power(st){let c=0;if(st.name.trim())c++;if(st.username.trim().length>2)c++;if(st.role.trim())c++;if(st.bio.trim().length>=30)c++;if(st.location.trim())c++;if(st.avatar.trim())c++;if(st.links.length>=3)c++;if(st.links.some(l=>l.hot))c++;return Math.round(c/8*100);}
+function encodeState(st){return btoa(unescape(encodeURIComponent(JSON.stringify(st)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function decodeState(code){const b=code.replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(escape(atob(b))));}
+function shareState(){const st=clone(state);if(st.sharePhoto===false)st.avatar='';return st;}
+function shareUrl(){return location.origin+location.pathname+'#/p/'+encodeState(shareState());}
+function qrApi(data){return 'https://api.qrserver.com/v1/create-qr-code/?size=148x148&margin=6&data='+encodeURIComponent(data);}
+
+const BRANDS={'facebook.com':'facebook','instagram.com':'instagram','tiktok.com':'tiktok','youtube.com':'youtube','youtu.be':'youtube','x.com':'x','twitter.com':'x','wa.me':'whatsapp','whatsapp.com':'whatsapp','t.me':'telegram','telegram.org':'telegram','open.spotify.com':'spotify','spotify.com':'spotify','discord.com':'discord','discord.gg':'discord','github.com':'github','pinterest.com':'pinterest','twitch.tv':'twitch','shopee.co.id':'shopee','shopee.com':'shopee','threads.net':'threads','snapchat.com':'snapchat','soundcloud.com':'soundcloud','medium.com':'medium','dribbble.com':'dribbble','behance.net':'behance','patreon.com':'patreon','maps.google.com':'googlemaps','reddit.com':'reddit'};
+function hostOf(u){try{return new URL(normUrl(u)).hostname.replace(/^www\./,'');}catch(e){return '';}}
+function iconHTML(l){
+ if(l.icon===undefined)return '🔗';
+ if(l.icon)return esc(l.icon);
+ const raw=String(l.url||'').trim();
+ if(/^mailto:/i.test(raw))return '✉️';
+ if(/^tel:/i.test(raw))return '📞';
+ const host=hostOf(raw);
+ if(!host)return '🔗';
+ let slug=null;
+ if(/(^|\.)google\.[a-z.]+$/.test(host)&&/\/maps/.test(raw))slug='googlemaps';
+ else{const keys=Object.keys(BRANDS).sort((a,b)=>b.length-a.length);for(const k of keys){if(host===k||host.endsWith('.'+k)){slug=BRANDS[k];break;}}}
+ const parts=host.split('.');const base=parts.length>2?parts[parts.length-2]:parts[0];
+ const letter=esc((base[0]||'L').toUpperCase());
+ const fav='https://www.google.com/s2/favicons?domain='+encodeURIComponent(host)+'&sz=128';
+ const err2='if(!this.dataset.f){this.dataset.f=1;this.src=\''+fav+'\';}else{this.outerHTML=\'<span class=&quot;icletter&quot;>'+letter+'</span>\';}';
+ if(slug)return '<img src="https://cdn.simpleicons.org/'+slug+'" alt="" loading="lazy" onerror="'+err2+'">';
+ return '<img src="'+fav+'" alt="" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;icletter&quot;>'+letter+'</span>\';">';
+}
+
+const C128='212222,222122,222221,121223,121322,131222,122213,122312,132212,221213,221312,231212,112232,122132,122231,113222,123122,123221,223211,221132,221231,213212,223112,312131,311222,321122,321221,312212,322112,322211,212123,212321,232121,111323,131123,131321,112313,132113,132311,211313,231113,231311,112133,112331,132131,113123,113321,133121,313121,211331,231131,213113,213311,213131,311123,311321,331121,312113,312311,332111,314111,221411,431111,111224,111422,121124,121421,141122,141221,112214,112412,122114,122411,142112,142211,241211,221114,413111,241112,134111,111242,121142,121241,114212,124112,124211,411212,421112,421211,212141,214121,412121,111143,111341,131141,114113,114311,411113,411311,113141,114131,311141,411131,211412,211214,211232,2331112'.split(',');
+function code128Vals(text){const vals=[104];let sum=104;for(let i=0;i<text.length;i++){const v=text.charCodeAt(i)-32;if(v<0||v>94)throw new Error('Karakter di luar set B');vals.push(v);sum+=v*(i+1);}vals.push(sum%103);vals.push(106);return vals;}
+function barcodeSVG(text){
+ const vals=code128Vals(String(text));const Q=10;let x=Q,rects='';
+ for(const v of vals){const p=C128[v];for(let i=0;i<p.length;i++){const w=+p[i];if(i%2===0)rects+='<rect x="'+x+'" y="0" width="'+w+'" height="10"/>';x+=w;}}
+ return '<svg viewBox="0 0 '+(x+Q)+' 10" preserveAspectRatio="none" fill="currentColor" role="img" aria-label="Barcode '+esc(text)+'">'+rects+'</svg>';
+}
+
+function passHTML(st,qrUrl){
+ const av=st.avatar&&st.avatar.trim()?esc(initials(st.name))+'<img src="'+esc(st.avatar)+'" alt="Foto profil" onerror="this.style.display=\'none\'">':esc(initials(st.name));
+ const hot=st.links.filter(l=>l.hot).length;
+ const stats=st.stats?'<div class="pstats"><div class="pstat"><b>'+st.links.length+'</b>LINK</div><div class="pstat"><b>'+hot+'</b>UNGGULAN</div><div class="pstat"><b>'+power(st)+'%</b>LENGKAP</div></div>':'';
+ const links=st.links.filter(l=>String(l.title||'').trim()||String(l.url||'').trim()).map(l=>
+  '<a class="plink" href="'+esc(normUrl(l.url))+'" target="_blank" rel="noopener"><span class="ic">'+iconHTML(l)+'</span><span><span class="tt">'+esc(l.title||'Tanpa judul')+(l.hot?'<span class="hotflag">UNGGULAN</span>':'')+'</span>'+(l.note?'<div class="nn">'+esc(l.note)+'</div>':'')+'</span><span class="go">→</span></a>').join('');
+ const stub=st.stub?'<aside class="pass-stub"><span class="stub-label">LinkPass • Satu Link</span><span class="hole"></span>'+(qrUrl?'<div class="qrbox"><img alt="QR code pass" src="'+esc(qrUrl)+'"></div>':'<div class="qrbox"><img alt="QR code pass" data-qr></div>')+'<div class="stubnum">NO '+stubNum(st.username)+'</div></aside>':'';
+ const bcode=st.stub?'<div class="pass-barcode">'+barcodeSVG(stubNum(st.username))+'</div>':'';
+ return '<article class="pass" data-skin="'+esc(st.skin)+'" data-font="'+esc(st.font||'archivo')+'" style="--accent:'+esc(st.accent)+'">'+
+ '<div class="pass-main"><div class="pass-top"><span>LinkPass • Digital Pass</span><span class="live"><span class="dot"></span>Aktif</span></div>'+
+ '<div class="avatarwrap"><div class="avatar">'+av+'</div><div><div class="pname">'+esc(st.name||'Nama Kamu')+'</div><div class="puser">'+esc(st.username||'@username')+'</div><div class="prole">'+esc(st.role||'')+'</div></div></div>'+
+ (st.bio?'<p class="pbio">'+esc(st.bio)+'</p>':'')+(st.location?'<div class="ploc">📍 '+esc(st.location)+'</div>':'')+
+ stats+'<div class="plinks">'+links+'</div>'+
+ '<div class="pass-foot"><span>LINKPASS.XSRAZY.WEB.ID</span><span>GRATIS • OPEN SOURCE</span></div></div>'+stub+bcode+'</article>';
+}
+
+let qrTimer=null,qrLast='';
+function renderPass(){$('#previewRoot').innerHTML=passHTML(state,null);scheduleQR();}
+function scheduleQR(){
+ const url=shareUrl();clearTimeout(qrTimer);
+ if(url===qrLast){const img=$('#previewRoot [data-qr]');if(img&&!img.src)img.src=qrApi(url);return;}
+ qrTimer=setTimeout(()=>{const u=shareUrl();qrLast=u;const img=$('#previewRoot [data-qr]');if(img)img.src=qrApi(u);},800);
+}
+function renderStats(){$('#statLinks').textContent=state.links.length;$('#statHot').textContent=state.links.filter(l=>l.hot).length;$('#statPower').textContent=power(state)+'%';$('#meter').style.width=power(state)+'%';$('#capUser').textContent=state.username||'@username';}
+function updateShare(){const u=shareUrl();$('#shareUrl').value=u;const sm=$('#shareMeta');if(sm)sm.innerHTML='Panjang link: <b>'+u.length+' karakter</b> ('+shareLenStatus()+'). '+(state.sharePhoto===false?'Foto tidak disertakan di link ini.':'Foto disertakan di link ini.');}
+function refresh(){renderPass();renderStats();updateShare();}
+
+function renderLinkRows(){
+ $('#linkRows').innerHTML=state.links.map((l,i)=>
+ '<div class="linkrow"><div class="top"><input class="ico" data-i="'+i+'" data-k="icon" value="'+esc(l.icon||'')+'" maxlength="4" placeholder="Auto" aria-label="Ikon, kosongkan untuk otomatis"><span class="icprev" data-icprev="'+i+'">'+iconHTML(l)+'</span>'+
+ '<input class="ttl" data-i="'+i+'" data-k="title" value="'+esc(l.title||'')+'" placeholder="Judul link" maxlength="60"></div>'+
+ '<input class="url" data-i="'+i+'" data-k="url" value="'+esc(l.url||'')+'" placeholder="https://...">'+
+ '<input class="note" data-i="'+i+'" data-k="note" value="'+esc(l.note||'')+'" placeholder="Catatan kecil (opsional)" maxlength="70">'+
+ '<div class="rowbtns"><button class="mini" data-act="up" data-i="'+i+'" type="button">↑ Naik</button><button class="mini" data-act="down" data-i="'+i+'" type="button">↓ Turun</button><button class="mini danger" data-act="del" data-i="'+i+'" type="button">Hapus</button>'+
+ '<label class="hotbox"><input type="checkbox" data-i="'+i+'" data-k="hot" '+(l.hot?'checked':'')+'> Tandai unggulan</label></div></div>').join('');
+}
+function updateIconPreviews(){document.querySelectorAll('[data-icprev]').forEach(el=>{const l=state.links[+el.dataset.icprev];if(l)el.innerHTML=iconHTML(l);});}
+function dataUrlKB(u){return Math.round(String(u).length*3/4/1024*10)/10;}
+function shareLenStatus(){const n=shareUrl().length;return n<=1800?'aman':(n<=3000?'cukup panjang':'panjang');}
+function refreshAvatarUI(){
+ const prev=$('#avatarPrev'),meta=$('#avatarMeta'),up=$('#avatarUploadBtn'),rm=$('#avatarRemoveBtn');
+ if(!prev)return;
+ const av=String(state.avatar||'');
+ if(av){prev.textContent='';const im=document.createElement('img');im.alt='Foto profil';im.onerror=()=>{prev.textContent=initials(state.name);};im.src=av;prev.appendChild(im);up.textContent='Ganti foto';rm.hidden=false;}
+ else{prev.textContent=initials(state.name);up.textContent='Upload foto';rm.hidden=true;}
+ if(av.startsWith('data:')){let h='Ukuran foto: <b>'+dataUrlKB(av)+' KB</b>. Panjang link share: <b>'+shareUrl().length+' karakter</b> ('+shareLenStatus()+').';if(state.sharePhoto!==false&&shareUrl().length>2000)h+='<br><button class="mini" id="extraCompress" type="button">Kompres ekstra untuk share</button>';meta.innerHTML=h;}
+ else if(av){meta.textContent='Foto ini dari URL lama. Ganti dengan upload atau hapus.';}
+ else{meta.textContent='Belum ada foto. Pass memakai inisial nama.';}
+ const ec=$('#extraCompress');if(ec)ec.addEventListener('click',extraCompressAvatar);
+}
+function syncForm(){
+ const map={name:'#f-name',username:'#f-username',role:'#f-role',bio:'#f-bio',location:'#f-location'};
+ for(const k in map){const el=$(map[k]);if(document.activeElement!==el)el.value=state[k]||'';}
+ $('#t-stats').checked=!!state.stats;$('#t-stub').checked=!!state.stub;
+ const sp=$('#t-sharephoto');if(sp)sp.checked=state.sharePhoto!==false;
+ document.querySelectorAll('#skinGrid .skin-btn').forEach(b=>b.classList.toggle('active',b.dataset.skin===state.skin));
+ document.querySelectorAll('#fontGrid .font-btn').forEach(b=>b.classList.toggle('active',b.dataset.font===(state.font||'archivo')));
+ document.querySelectorAll('#accentSwatches .swatch').forEach(b=>b.classList.toggle('active',b.dataset.color===state.accent));
+ refreshAvatarUI();
+}
+function buildPickers(){
+ $('#skinGrid').innerHTML=SKINS.map(s=>'<button type="button" class="skin-btn" data-skin="'+s.id+'"><span class="sw" style="background:'+s.css+'"></span><small>'+s.name+'</small><span>'+s.desc+'</span></button>').join('');
+ $('#fontGrid').innerHTML=FONTS.map(f=>'<button type="button" class="font-btn" data-font="'+f.id+'"><span class="fp" style="font-family:'+f.fam+'">'+f.name+'</span><small>'+f.name+'</small><span>'+f.desc+'</span></button>').join('');
+ $('#accentSwatches').innerHTML=ACCENTS.map(c=>'<button type="button" class="swatch" data-color="'+c+'" style="background:'+c+'" aria-label="Warna '+c+'"></button>').join('')+'<input type="color" class="colorpick" id="accentPick" value="'+esc(state.accent)+'">';
+ $('#skinGrid').addEventListener('click',e=>{const b=e.target.closest('[data-skin]');if(!b)return;state.skin=b.dataset.skin;save();syncForm();renderPass();});
+ $('#fontGrid').addEventListener('click',e=>{const b=e.target.closest('[data-font]');if(!b)return;ensureFont(b.dataset.font);state.font=b.dataset.font;save();syncForm();renderPass();updateShare();});
+ $('#accentSwatches').addEventListener('click',e=>{const b=e.target.closest('[data-color]');if(!b)return;state.accent=b.dataset.color;$('#accentPick').value=state.accent;save();syncForm();renderPass();});
+ $('#accentSwatches').addEventListener('input',e=>{if(e.target.id==='accentPick'){state.accent=e.target.value;save();syncForm();renderPass();}});
+}
+let toastTimer=null;
+function toast(msg,actionLabel,actionFn){
+ const t=$('#toast');t.innerHTML=esc(msg)+(actionLabel?'<button type="button" id="toastActBtn">'+esc(actionLabel)+'</button>':'');
+ t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),actionLabel?5000:2200);
+ if(actionLabel){const b=$('#toastActBtn');if(b)b.addEventListener('click',()=>{t.classList.remove('show');actionFn&&actionFn();});}
+}
+
+/* ---------- foto profil: crop + kompres ---------- */
+let cropSrc=null,crop={rot:0,zoom:1,ox:0,oy:0},cropReturnFocus=null;
+function closeCrop(){$('#cropWrap').hidden=true;const t=(cropReturnFocus&&cropReturnFocus!==document.body&&cropReturnFocus.focus)?cropReturnFocus:$('#avatarUploadBtn');if(t&&t.focus)t.focus();}
+function duBytes(u){const i=u.indexOf(',');return Math.floor((u.length-i-1)*3/4);}
+function canvasHasAlpha(cv){try{const d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;for(let i=3;i<d.length;i+=4){if(d[i]<250)return true;}}catch(e){}return false;}
+function encodeCropped(cv){
+ if(canvasHasAlpha(cv)){const png=cv.toDataURL('image/png');if(duBytes(png)<=18*1024)return png;
+  const flat=document.createElement('canvas');flat.width=cv.width;flat.height=cv.height;const fx=flat.getContext('2d');fx.fillStyle='#f4f1e8';fx.fillRect(0,0,flat.width,flat.height);fx.drawImage(cv,0,0);cv=flat;}
+ let last='';
+ for(const q of [0.8,0.72,0.65]){last=cv.toDataURL('image/jpeg',q);if(duBytes(last)<=18*1024)return last;}
+ const small=document.createElement('canvas');small.width=160;small.height=160;small.getContext('2d').drawImage(cv,0,0,160,160);
+ for(const q of [0.65,0.55]){last=small.toDataURL('image/jpeg',q);if(duBytes(last)<=18*1024)return last;}
+ return last;
+}
+function setAvatar(u,msg){const prev=state.avatar;state.avatar=u;save();renderPass();updateShare();refreshAvatarUI();toast(msg,'Urungkan',()=>{state.avatar=prev;save();renderPass();updateShare();refreshAvatarUI();});}
+function removeAvatar(){if(!state.avatar)return;const prev=state.avatar;state.avatar='';save();renderPass();updateShare();refreshAvatarUI();toast('Foto dihapus','Urungkan',()=>{state.avatar=prev;save();renderPass();updateShare();refreshAvatarUI();});}
+function extraCompressAvatar(){
+ const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=160;c.height=160;const x=c.getContext('2d');x.fillStyle='#f4f1e8';x.fillRect(0,0,160,160);x.drawImage(img,0,0,160,160);setAvatar(c.toDataURL('image/jpeg',0.6),'Foto dikompres ekstra');};
+ img.onerror=()=>toast('Foto tidak bisa dibaca ulang');img.src=state.avatar;
+}
+function layoutCrop(){
+ if(!cropSrc)return;const stage=$('#cropStage'),S=stage.clientWidth||280,img=$('#cropImg');
+ const rot=crop.rot%180!==0,W=rot?cropSrc.h:cropSrc.w,H=rot?cropSrc.w:cropSrc.h;
+ const s=Math.max(S/W,S/H)*crop.zoom,dw=cropSrc.w*s,dh=cropSrc.h*s;
+ const bw=rot?dh:dw,bh=rot?dw:dh;
+ crop.ox=Math.max(-Math.max(0,(bw-S)/2),Math.min(Math.max(0,(bw-S)/2),crop.ox));
+ crop.oy=Math.max(-Math.max(0,(bh-S)/2),Math.min(Math.max(0,(bh-S)/2),crop.oy));
+ img.style.width=dw+'px';img.style.height=dh+'px';
+ img.style.transform='translate(-50%,-50%) translate('+crop.ox+'px,'+crop.oy+'px) rotate('+crop.rot+'deg)';
+}
+async function openCrop(file){
+ if(!file)return;
+ cropReturnFocus=document.activeElement;
+ if(file.type==='image/svg+xml'){toast('Format SVG tidak didukung. Pakai JPG, PNG, atau WebP.');return;}
+ if(!file.type||!file.type.startsWith('image/')){toast('File itu bukan gambar.');return;}
+ let bmp=null;
+ try{bmp=await createImageBitmap(file,{imageOrientation:'from-image'});}catch(e){try{bmp=await createImageBitmap(file);}catch(e2){bmp=null;}}
+ if(!bmp){toast('Format gambar ini tidak bisa dibaca browser. Coba JPG atau PNG.');return;}
+ cropSrc={bmp:bmp,w:bmp.width,h:bmp.height};
+ crop={rot:0,zoom:1,ox:0,oy:0};$('#cropZoom').value='1';
+ const url=URL.createObjectURL(file);const img=$('#cropImg');img.src=url;
+ $('#cropWrap').hidden=false;$('#cropApply').focus();requestAnimationFrame(layoutCrop);
+}
+function applyCrop(){
+ if(!cropSrc)return;const stage=$('#cropStage'),S=stage.clientWidth||280,k=192/S;
+ const cv=document.createElement('canvas');cv.width=192;cv.height=192;const x=cv.getContext('2d');
+ const rot=crop.rot%180!==0,W=rot?cropSrc.h:cropSrc.w,H=rot?cropSrc.w:cropSrc.h;
+ const s0=Math.max(S/W,S/H)*crop.zoom;
+ x.translate(96,96);x.translate(crop.ox*k,crop.oy*k);x.rotate(crop.rot*Math.PI/180);x.scale(s0*k,s0*k);
+ x.drawImage(cropSrc.bmp,-cropSrc.w/2,-cropSrc.h/2);
+ closeCrop();
+ setAvatar(encodeCropped(cv),'Foto diperbarui');
+}
+
+const STANDALONE_CSS='body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#101014;background-image:radial-gradient(#26262f 1px,transparent 1px);background-size:22px 22px;font-family:system-ui,sans-serif;padding:28px 12px}.pass{--pass-bg:#17171d;--pass-ink:#f4f1e8;--pass-muted:#a3a099;--pass-chip:#232329;--pass-line:#33333d;--font-display:"Archivo",sans-serif;--font-body:"Space Grotesk",sans-serif;font-family:var(--font-body);width:min(460px,94vw);background:var(--pass-bg);color:var(--pass-ink);border-radius:26px;display:flex;flex-wrap:wrap;overflow:hidden;box-shadow:0 34px 70px rgba(0,0,0,.55)}.pass[data-skin="boarding"]{--pass-bg:#f6f1e3;--pass-ink:#182540;--pass-muted:#5d6b84;--pass-chip:#fffdf4;--pass-line:#c9bfa5}.pass[data-skin="vinyl"]{--pass-bg:linear-gradient(165deg,#33190d,#5c2d13 60%,#7a3c17);--pass-ink:#ffe7cb;--pass-muted:#e7bb92;--pass-chip:rgba(0,0,0,.3);--pass-line:#8a4d22}.pass[data-skin="arcade"]{--pass-bg:#0d0621;--pass-ink:#eaf7ff;--pass-muted:#9db4d8;--pass-chip:#1a0f38;--pass-line:#3a2a7a}.pass[data-skin="receipt"]{--pass-bg:#fbfbf5;--pass-ink:#141414;--pass-muted:#6d6d63;--pass-chip:#fff;--pass-line:#d8d8cc}.pass[data-skin="botanical"]{--pass-bg:#edf3e2;--pass-ink:#22351e;--pass-muted:#5d6f52;--pass-chip:#fbfdf4;--pass-line:#c3d2ab}.pass[data-skin="ktp"]{--pass-bg:linear-gradient(160deg,#d7e9fa,#aecdf1);--pass-ink:#14315c;--pass-muted:#35537c;--pass-chip:#eef5fd;--pass-line:#7ea6d4}.pass[data-skin="paspor"]{--pass-bg:linear-gradient(165deg,#0f1e3a,#1c3465);--pass-ink:#f3e9cf;--pass-muted:#c2b184;--pass-chip:#22355e;--pass-line:#a5853f}.pass[data-skin="bioskop"]{--pass-bg:linear-gradient(165deg,#150607,#2c0d11);--pass-ink:#f7ead9;--pass-muted:#c4a184;--pass-chip:#331216;--pass-line:#6e2a2a}.pass[data-font="jakarta"]{--font-display:"Plus Jakarta Sans",sans-serif;--font-body:"Plus Jakarta Sans",sans-serif}.pass[data-font="bebas"]{--font-display:"Bebas Neue",sans-serif;--font-body:"Space Grotesk",sans-serif}.pass[data-font="bebas"] .pname{font-size:33px;letter-spacing:1px;font-weight:400}.pass[data-font="playfair"]{--font-display:"Playfair Display",serif;--font-body:"Space Grotesk",sans-serif}.pass[data-font="playfair"] .pname{font-weight:800}.pass[data-font="mono"]{--font-display:"JetBrains Mono",monospace;--font-body:"JetBrains Mono",monospace}.pass[data-font="caveat"]{--font-display:"Caveat",cursive;--font-body:"Space Grotesk",sans-serif}.pass[data-font="caveat"] .pname{font-size:38px;font-weight:700}.pass[data-skin="receipt"] .pname{font-family:"JetBrains Mono",monospace}.pass-top,.pstat,.pass-foot,.stub-label,.stubnum,.hotflag{font-family:"JetBrains Mono",monospace}.pass-main{flex:1;padding:26px 24px 22px;min-width:0}.pass-stub{width:104px;flex:none;border-left:2.5px dashed var(--pass-line);padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:12px}.pass-top{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:1.6px;color:var(--pass-muted);text-transform:uppercase}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)}.avatarwrap{display:flex;gap:15px;align-items:center;margin:20px 0 6px}.avatar{width:74px;height:74px;border-radius:22px;position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:26px;background:var(--accent);color:#101014;overflow:hidden}.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.pname{font-family:var(--font-display);font-weight:900;font-size:29px;line-height:1.05;overflow-wrap:anywhere}.puser{color:var(--accent);font-weight:700;margin-top:3px}.prole{font-size:13.5px;color:var(--pass-muted);margin-top:2px;overflow-wrap:anywhere}.pbio{font-size:15px;line-height:1.55;margin:13px 0 4px;overflow-wrap:anywhere}.ploc{font-size:13px;color:var(--pass-muted);overflow-wrap:anywhere}.pstats{display:flex;gap:9px;margin:16px 0 4px;flex-wrap:wrap}.pstat{background:var(--pass-chip);border:1.5px solid var(--pass-line);border-radius:12px;padding:8px 12px;font-size:11.5px}.pstat b{display:block;font-size:16px}.plinks{display:flex;flex-direction:column;gap:10px;margin-top:16px}.plink{display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--pass-chip);border:1.8px solid var(--pass-line);border-radius:16px;padding:12px 14px;color:var(--pass-ink)}.plink .ic{width:40px;height:40px;flex:none;border-radius:12px;background:var(--pass-bg);border:1.5px solid var(--pass-line);display:flex;align-items:center;justify-content:center;font-size:18px}.plink .ic img{width:22px;height:22px;display:block}.plink .ic .icletter{font-family:var(--font-display);font-weight:900;font-size:17px;color:var(--accent)}.plink .tt{font-weight:700;font-size:15.5px;overflow-wrap:anywhere}.plink .nn{font-size:12.5px;color:var(--pass-muted)}.plink .go{margin-left:auto;color:var(--accent);font-weight:900}.hotflag{font-size:9.5px;background:#ff5c39;color:#fff;border-radius:6px;padding:2.5px 6px;margin-left:7px}.pass-foot{margin-top:18px;font-size:10.5px;color:var(--pass-muted);display:flex;justify-content:space-between}.stub-label{font-size:9.5px;letter-spacing:2px;color:var(--pass-muted);text-transform:uppercase}.qrbox{background:#fff;border-radius:12px;padding:6px;line-height:0}.qrbox img{width:74px;height:74px}.pass-barcode{order:3;flex:0 0 100%;border-top:2.5px dashed var(--pass-line);padding:14px 22px 16px;color:var(--pass-ink);line-height:0}.pass-barcode svg{width:100%;height:50px;display:block}@media(max-width:460px){.pass{flex-direction:column;flex-wrap:nowrap}.pass-stub{width:auto;border-left:none;border-top:2.5px dashed var(--pass-line);flex-direction:row;justify-content:space-between}.pass-barcode{flex:none}}.stubnum{font-size:10px;color:var(--pass-muted);text-align:center;word-break:break-all}.hole{width:22px;height:22px;border-radius:50%;background:#101014}';
+
+function init(){
+ let badLink=false;
+ if(window.__LINKPASS_SERVER_STATE__){
+  try{
+   const pub=sanitizeState(window.__LINKPASS_SERVER_STATE__);
+   const slug=window.__LINKPASS_SERVER_SLUG__||'';
+   document.body.classList.add('public');document.title=(pub.name||'LinkPass')+' | LinkPass';ensureFont(pub.font||'archivo');
+   $('#publicRoot').innerHTML=passHTML(pub,qrApi(location.href))+'<div class="madewith">Dibuat dengan <a href="/">LinkPass</a> • Gratis • Tanpa daftar</div><div class="madewith"><button class="mini" id="recoverBtn" type="button">Lupa link kelola?</button> <span id="recoverMsg"></span></div>';
+   // Visit beacon: exactly one per page load, never blocking the render.
+   // The server dedupes repeat loads from the same IP on the same day.
+   if(!window.__LINKPASS_VISIT_SENT__){window.__LINKPASS_VISIT_SENT__=true;try{fetch(API_URL+'/passes/'+slug+'/visit',{method:'POST',keepalive:true});}catch(e){}}
+   document.querySelectorAll('#publicRoot .plink').forEach(a=>{
+    a.addEventListener('click',()=>{
+     try{fetch(API_URL+'/passes/'+slug+'/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({link_url:a.getAttribute('href')}),keepalive:true});}catch(e){}
+    });
+   });
+   const rb=$('#recoverBtn');
+   if(rb)rb.addEventListener('click',async()=>{
+    const email=prompt('Masukkan email pemulihan yang kamu daftarkan:');
+    if(!email)return;
+    try{await fetch(API_URL+'/passes/'+slug+'/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});$('#recoverMsg').textContent='Permintaan terkirim. Admin akan memprosesnya.';}
+    catch(e){$('#recoverMsg').textContent='Gagal mengirim permintaan.';}
+   });
+   return;
+  }catch(e){/* jatuh ke editor kalau state server rusak */}
+ }
+ if(location.hash.startsWith('#/p/')){
+  try{const pub=sanitizeState(decodeState(location.hash.slice(4)));
+   document.body.classList.add('public');document.title=(pub.name||'LinkPass')+' | LinkPass';ensureFont(pub.font||'archivo');
+   $('#publicRoot').innerHTML=passHTML(pub,qrApi(location.href))+'<div class="madewith">Dibuat dengan <a href="/">LinkPass</a> • Gratis • Tanpa daftar</div>';
+   return;
+  }catch(e){badLink=true;history.replaceState(null,'',location.pathname+location.search);}
+ }
+ buildPickers();save();ensureFont(state.font||'archivo');
+ const fg=$('#fontGrid');
+ if(fg&&'IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(en=>en.isIntersecting)){Object.keys(FONT_LAZY).forEach(ensureFont);io.disconnect();}},{rootMargin:'300px'});io.observe(fg);}
+ syncForm();renderLinkRows();refresh();
+ if(badLink)toast('Tautan tidak valid');
+ showServerNotice();
+ const map={name:'#f-name',username:'#f-username',role:'#f-role',bio:'#f-bio',location:'#f-location'};
+ for(const k in map){$(map[k]).addEventListener('input',e=>{state[k]=e.target.value;save();renderPass();renderStats();updateShare();if(k==='name')refreshAvatarUI();});}
+ $('#t-stats').addEventListener('change',e=>{state.stats=e.target.checked;save();renderPass();});
+ $('#t-stub').addEventListener('change',e=>{state.stub=e.target.checked;save();renderPass();});
+ $('#t-sharephoto').addEventListener('change',e=>{state.sharePhoto=e.target.checked;save();updateShare();refreshAvatarUI();toast(e.target.checked?'Foto disertakan di link share':'Foto tidak disertakan di link share');});
+ $('#avatarUploadBtn').addEventListener('click',()=>$('#avatarFile').click());
+ $('#avatarFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';openCrop(f);});
+ $('#avatarRemoveBtn').addEventListener('click',removeAvatar);
+ $('#cropCancel').addEventListener('click',closeCrop);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#cropWrap').hidden)closeCrop();});
+ $('#cropApply').addEventListener('click',applyCrop);
+ $('#cropRotate').addEventListener('click',()=>{crop.rot=(crop.rot+90)%360;crop.ox=0;crop.oy=0;layoutCrop();});
+ $('#cropReset').addEventListener('click',()=>{crop={rot:0,zoom:1,ox:0,oy:0};$('#cropZoom').value='1';layoutCrop();});
+ $('#cropZoom').addEventListener('input',e=>{crop.zoom=+e.target.value;layoutCrop();});
+ const cstage=$('#cropStage');let dragP=null;
+ cstage.addEventListener('pointerdown',e=>{dragP={x:e.clientX,y:e.clientY,ox:crop.ox,oy:crop.oy};cstage.setPointerCapture(e.pointerId);});
+ cstage.addEventListener('pointermove',e=>{if(!dragP)return;crop.ox=dragP.ox+(e.clientX-dragP.x);crop.oy=dragP.oy+(e.clientY-dragP.y);layoutCrop();});
+ cstage.addEventListener('pointerup',()=>{dragP=null;});
+ cstage.addEventListener('pointercancel',()=>{dragP=null;});
+ const editorEl=document.querySelector('.editor');
+ ['dragenter','dragover'].forEach(ev=>editorEl.addEventListener(ev,e=>{e.preventDefault();editorEl.classList.add('dragging');}));
+ ['dragleave','drop'].forEach(ev=>editorEl.addEventListener(ev,e=>{e.preventDefault();editorEl.classList.remove('dragging');}));
+ editorEl.addEventListener('drop',e=>{const f=[...(e.dataTransfer.files||[])].find(f=>f.type.startsWith('image/'));if(f)openCrop(f);});
+ document.addEventListener('paste',e=>{const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;const f=[...(e.clipboardData?.files||[])].find(f=>f.type.startsWith('image/'));if(f)openCrop(f);});
+ $('#linkRows').addEventListener('input',e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;if(k==='hot')return;if(!isNaN(i)&&k){state.links[i][k]=e.target.value;save();renderPass();renderStats();updateShare();updateIconPreviews();}});
+ $('#linkRows').addEventListener('change',e=>{const i=+e.target.dataset.i;if(e.target.dataset.k==='hot'){state.links[i].hot=e.target.checked;save();renderPass();renderStats();updateShare();}});
+ $('#linkRows').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const i=+b.dataset.i;const act=b.dataset.act;
+  if(act==='del')state.links.splice(i,1);
+  if(act==='up'&&i>0)[state.links[i-1],state.links[i]]=[state.links[i],state.links[i-1]];
+  if(act==='down'&&i<state.links.length-1)[state.links[i+1],state.links[i]]=[state.links[i],state.links[i+1]];
+  save();renderLinkRows();refresh();});
+ $('#addLink').addEventListener('click',()=>{state.links.push({icon:'',title:'Link baru',url:'https://',note:'',hot:false});save();renderLinkRows();refresh();});
+ $('#applyPreset').addEventListener('click',()=>{const prev=clone(state);state=clone(PRESETS[$('#presetSel').value]||DEFAULT);ensureFont(state.font||'archivo');save();syncForm();renderLinkRows();refresh();toast('Contoh isi diterapkan','Urungkan',()=>{state=prev;save();syncForm();renderLinkRows();refresh();});});
+ $('#shuffleBtn').addEventListener('click',()=>{state.skin=SKINS[Math.floor(Math.random()*SKINS.length)].id;state.accent=ACCENTS[Math.floor(Math.random()*ACCENTS.length)];state.font=FONTS[Math.floor(Math.random()*FONTS.length)].id;ensureFont(state.font);$('#accentPick').value=state.accent;save();syncForm();renderPass();updateShare();toast('Vibe baru diterapkan');});
+ $('#copyShare').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareUrl());toast('Link pass tersalin');}catch(e){$('#shareUrl').select();document.execCommand('copy');toast('Link pass tersalin');}});
+ $('#saveShortBtn').addEventListener('click',async()=>{
+  const email=$('#shortEmail')?$('#shortEmail').value.trim():'';
+  try{
+   const res=await fetch(API_URL+'/passes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:shareState(),recovery_email:email||undefined})});
+   const data=await res.json();
+   if(!res.ok)throw new Error(data.error||'Gagal menyimpan');
+   $('#shortPublic').value=data.publicUrl;$('#shortManage').value=data.manageUrl;$('#shortBox').hidden=false;
+   // Remembered for this tab only (sessionStorage, never localStorage):
+   // the token itself is never shown again, it is only reused by the
+   // "Perbarui short link" button below. Closing the tab forgets it.
+   try{sessionStorage.setItem('linkpass_server',JSON.stringify({slug:data.slug,publicUrl:data.publicUrl,manageUrl:data.manageUrl}));}catch(e){}
+   showServerNotice();
+   toast(data.dropped?'Short link dibuat. '+data.dropped+' link dilewati karena URL-nya tidak valid.':'Short link dibuat. Simpan link kelola di bawah.');
+  }catch(e){toast(e.message||'Gagal membuat short link');}
+ });
+ const copyVal=async(id)=>{try{await navigator.clipboard.writeText($(id).value);toast('Tersalin');}catch(e){$(id).select();document.execCommand('copy');toast('Tersalin');}};
+ $('#copyShortPublic').addEventListener('click',()=>copyVal('#shortPublic'));
+ $('#copyShortManage').addEventListener('click',()=>copyVal('#shortManage'));
+ $('#downloadAccessCard').addEventListener('click',()=>{
+  const txt='LinkPass - Kartu akses pass\n\nShort link publik:\n'+$('#shortPublic').value+'\n\nLink kelola rahasia (satu-satunya kunci edit, statistik, dan hapus):\n'+$('#shortManage').value+'\n\nSimpan file ini baik-baik. LinkPass tidak bisa menampilkan link kelola ini lagi.';
+  const blob=new Blob([txt],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='linkpass-kartu-akses.txt';a.click();URL.revokeObjectURL(a.href);toast('Kartu akses diunduh');
+ });
+ $('#closeShortBox').addEventListener('click',()=>{$('#shortBox').hidden=true;$('#shortManage').value='';});
+ function getServerPass(){try{return JSON.parse(sessionStorage.getItem('linkpass_server')||'null');}catch(e){return null;}}
+ function showServerNotice(){
+  const entry=getServerPass();const box=$('#serverNotice');if(!box)return;
+  if(!entry||!entry.publicUrl){box.hidden=true;return;}
+  $('#serverNoticeText').textContent='Short link sudah dibuat: '+entry.publicUrl+'. Edit di sini tidak mengubah short link. Perbarui lewat tombol di bawah, atau edit lewat halaman kelola.';
+  $('#updateShortBtn').style.display=entry.manageUrl?'':'none';
+  $('#openManageBtn').style.display=entry.manageUrl?'':'none';
+  box.hidden=false;
+ }
+ $('#updateShortBtn').addEventListener('click',async()=>{
+  const entry=getServerPass();
+  if(!entry||!entry.manageUrl){toast('Link kelola tidak tersimpan di tab ini. Buka halaman kelola lewat kartu akses yang kamu simpan.');return;}
+  const token=entry.manageUrl.split('/manage/')[1]||'';
+  try{
+   const res=await fetch(API_URL+'/passes/'+entry.slug,{method:'PUT',headers:{'Content-Type':'application/json','x-manage-token':token},body:JSON.stringify({state:shareState()})});
+   const data=await res.json();
+   if(!res.ok)throw new Error(data.error||'Gagal memperbarui');
+   toast(data.dropped?'Short link diperbarui. '+data.dropped+' link dilewati karena URL-nya tidak valid.':'Short link diperbarui.');
+  }catch(e){
+   if(/tidak valid/i.test(e.message||'')){try{sessionStorage.removeItem('linkpass_server');}catch(err){}showServerNotice();}
+   toast(e.message||'Gagal memperbarui short link');
+  }
+ });
+ $('#openManageBtn').addEventListener('click',()=>{
+  const entry=getServerPass();
+  if(entry&&entry.manageUrl)window.open(entry.manageUrl,'_blank');
+  else toast('Link kelola tidak tersimpan di tab ini. Buka halaman kelola lewat kartu akses yang kamu simpan.');
+ });
+ $('#openPublic').addEventListener('click',()=>window.open(shareUrl(),'_blank'));
+ $('#exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='linkpass.json';a.click();URL.revokeObjectURL(a.href);});
+ $('#importBtn').addEventListener('click',()=>$('#importFile').click());
+ $('#importFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!isImportable(data))throw 0;state=sanitizeState(data);ensureFont(state.font||'archivo');save();syncForm();renderLinkRows();refresh();toast('Impor berhasil');}catch(err){toast('File JSON tidak valid');}};r.readAsText(f);e.target.value='';});
+ $('#downloadHtml').addEventListener('click',()=>{const fnt=FONTS.find(f=>f.id===(state.font||'archivo'))||FONTS[0];const gf=fnt.gf+(fnt.id==='mono'?'':'&family=JetBrains+Mono:wght@500;700');const doc='<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(state.name)+' | LinkPass</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?'+gf+'&display=swap" rel="stylesheet"><style>'+STANDALONE_CSS+'</style></head><body>'+passHTML(state,qrApi(shareUrl()))+'</body></html>';const blob=new Blob([doc],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='linkpass-saya.html';a.click();URL.revokeObjectURL(a.href);toast('HTML diunduh');});
+ $('#resetBtn').addEventListener('click',()=>{if(confirm('Reset semua isi pass ke contoh awal?')){state=clone(DEFAULT);save();syncForm();renderLinkRows();refresh();toast('Pass direset');}});
+ window.addEventListener('hashchange',()=>location.reload());
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+hidden_files/
+.vercel/
+.env*
+node_modules/
+.wrangler/
+*.log

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin LinkPass</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<style>
+:root{--bg:#101014;--panel:#17171d;--panel2:#1e1e26;--line:#2b2b35;--ink:#f4f1e8;--muted:#a3a099;--accent:#c8ff3d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,sans-serif;padding:28px 14px}
+.wrap{max-width:860px;margin:0 auto}.card{background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:0 0 12px}.muted{color:var(--muted);font-size:14px;line-height:1.6}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+input{width:100%;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;color:var(--ink);padding:11px 13px;font-size:15px;font-family:inherit}
+.btn{display:inline-block;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;color:var(--ink);padding:9px 14px;font-size:14px;cursor:pointer;margin:3px 4px 3px 0}
+.btn.primary{background:var(--accent);color:#101014;border-color:var(--accent);font-weight:700}
+.btn.danger{color:#ff7a6b;border-color:#5a2a26}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:var(--panel2);border:1.5px solid var(--line);border-radius:14px;padding:14px}
+.stat b{font-size:26px;display:block}.stat span{color:var(--muted);font-size:13px}
+.row{border-top:1.5px solid var(--line);padding:14px 0}.row:first-child{border-top:none}
+.row .title{font-weight:700}.row .meta{color:var(--muted);font-size:13px;margin:3px 0 8px}
+.msg{padding:12px 14px;border-radius:12px;background:var(--panel2);font-size:14px;margin-top:12px;word-break:break-all}
+.msg.err{color:#ff9d8f}a{color:var(--accent)}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Admin LinkPass</h1>
+<p class="muted">Dashboard mini pemilik. Halaman ini tidak terindeks mesin pencari.</p>
+<div class="card" id="loginBox">
+<label for="adminKey">Kunci admin</label>
+<input id="adminKey" type="password" placeholder="Tempel kunci admin">
+<button class="btn primary" id="loginBtn" type="button">Masuk</button>
+<div class="msg" id="loginMsg" hidden></div>
+</div>
+<div id="main" hidden>
+<div class="card">
+<h2>Ringkasan</h2>
+<div class="stats" id="statsBox"></div>
+</div>
+<div class="card">
+<h2>Pass terbaru</h2>
+<div style="display:flex;gap:8px"><input id="search" placeholder="Cari slug atau nama"><button class="btn" id="searchBtn" type="button">Cari</button></div>
+<div id="passList"><p class="muted">Memuat...</p></div>
+<div class="msg" id="passMsg" hidden></div>
+</div>
+<div class="card">
+<h2>Permintaan pemulihan link kelola</h2>
+<div id="recoveryList"><p class="muted">Memuat...</p></div>
+<div class="msg" id="recoveryMsg" hidden></div>
+</div>
+</div>
+</div>
+<script>
+const API = 'https://linkpass-api.fleursmeron-id.workers.dev';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let key = sessionStorage.getItem('linkpass_admin_key') || '';
+function headers() { return { 'x-admin-key': key }; }
+function showMsg(id, text, isErr) { const m = $(id); m.hidden = false; m.textContent = text; m.classList.toggle('err', !!isErr); }
+async function api(path, opts) {
+  const res = await fetch(API + path, { ...(opts || {}), headers: { ...(opts && opts.headers ? opts.headers : {}), ...headers() } });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(d.error || 'Permintaan gagal');
+  return d;
+}
+async function loadStats() {
+  try {
+    const d = await api('/admin/stats');
+    $('#statsBox').innerHTML =
+      '<div class="stat"><b>' + d.totalPasses + '</b><span>Total pass</span></div>' +
+      '<div class="stat"><b>' + d.activePasses + '</b><span>Pass aktif</span></div>' +
+      '<div class="stat"><b>' + d.newPasses7d + '</b><span>Pass baru 7 hari</span></div>' +
+      '<div class="stat"><b>' + (d.newPasses1h || 0) + '</b><span>Pass baru 1 jam</span></div>' +
+      '<div class="stat"><b>' + d.totalVisits + '</b><span>Total kunjungan</span></div>' +
+      '<div class="stat"><b>' + d.totalClicks + '</b><span>Total klik</span></div>' +
+      '<div class="stat"><b>' + d.pendingRecovery + '</b><span>Pemulihan pending</span></div>';
+  } catch (e) { $('#statsBox').innerHTML = '<p class="muted">Ringkasan gagal dimuat.</p>'; }
+}
+async function loadPasses() {
+  const q = $('#search').value.trim();
+  try {
+    const d = await api('/admin/passes' + (q ? '?q=' + encodeURIComponent(q) : ''));
+    if (!d.passes.length) { $('#passList').innerHTML = '<p class="muted">Tidak ada pass.</p>'; return; }
+    $('#passList').innerHTML = d.passes.map((p) =>
+      '<div class="row"><div class="title">' + esc(p.name || '(tanpa nama)') + ' <span class="meta">' + esc(p.username || '') + '</span></div>' +
+      '<div class="meta">/' + esc(p.slug) + ' • ' + p.visits + ' kunjungan • ' + p.clicks + ' klik • ' + esc(p.created_at.slice(0, 10)) + (p.disabled ? ' • Nonaktif' : '') + '</div>' +
+      '<div><a class="btn" href="/p/' + esc(p.slug) + '" target="_blank" rel="noopener">Buka</a>' +
+      '<button class="btn" data-act="' + (p.disabled ? 'enable' : 'disable') + '" data-slug="' + esc(p.slug) + '" type="button">' + (p.disabled ? 'Aktifkan' : 'Nonaktifkan') + '</button>' +
+      '<button class="btn" data-act="reset" data-slug="' + esc(p.slug) + '" type="button">Reset link kelola</button>' +
+      '<button class="btn danger" data-act="delete" data-slug="' + esc(p.slug) + '" type="button">Hapus</button></div></div>').join('');
+  } catch (e) { $('#passList').innerHTML = '<p class="muted">Daftar pass gagal dimuat.</p>'; }
+}
+async function loadRecovery() {
+  try {
+    const d = await api('/admin/recovery-requests');
+    const pending = d.requests.filter((r) => r.status === 'pending');
+    if (!pending.length) { $('#recoveryList').innerHTML = '<p class="muted">Tidak ada permintaan pending.</p>'; return; }
+    $('#recoveryList').innerHTML = pending.map((r) =>
+      '<div class="row"><div class="title">/' + esc(r.slug) + '</div><div class="meta">' + esc(r.email) + ' • ' + esc(r.created_at.slice(0, 10)) + '</div>' +
+      '<div><button class="btn primary" data-ract="approve" data-id="' + esc(r.id) + '" type="button">Setujui dan buat link baru</button>' +
+      '<button class="btn" data-ract="reject" data-id="' + esc(r.id) + '" type="button">Tolak</button></div></div>').join('');
+  } catch (e) { $('#recoveryList').innerHTML = '<p class="muted">Daftar pemulihan gagal dimuat.</p>'; }
+}
+$('#loginBtn').addEventListener('click', async () => {
+  key = $('#adminKey').value.trim();
+  if (!key) return;
+  try {
+    await api('/admin/stats');
+    sessionStorage.setItem('linkpass_admin_key', key);
+    $('#loginBox').hidden = true; $('#main').hidden = false;
+    loadStats(); loadPasses(); loadRecovery();
+  } catch (e) { showMsg('#loginMsg', 'Kunci admin tidak valid.', true); }
+});
+$('#searchBtn').addEventListener('click', loadPasses);
+$('#search').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadPasses(); });
+$('#passList').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act, slug = b.dataset.slug;
+  try {
+    if (act === 'delete') {
+      if (!confirm('Hapus pass /' + slug + ' permanen?')) return;
+      await api('/admin/passes/' + slug, { method: 'DELETE' });
+      showMsg('#passMsg', 'Pass /' + slug + ' dihapus.');
+    } else if (act === 'reset') {
+      const d = await api('/admin/passes/' + slug + '/reset-manage', { method: 'POST' });
+      showMsg('#passMsg', 'Link kelola baru untuk /' + slug + ': ' + d.manageUrl + ' Teruskan link ini ke pemilik, link lama sudah tidak berlaku.');
+    } else {
+      await api('/admin/passes/' + slug + '/' + act, { method: 'POST' });
+      showMsg('#passMsg', 'Pass /' + slug + (act === 'disable' ? ' dinonaktifkan.' : ' diaktifkan.'));
+    }
+    loadPasses(); loadStats();
+  } catch (err) { showMsg('#passMsg', err.message, true); }
+});
+$('#recoveryList').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-ract]'); if (!b) return;
+  const act = b.dataset.ract, id = b.dataset.id;
+  try {
+    if (act === 'approve') {
+      const d = await api('/admin/recovery-requests/' + id + '/approve', { method: 'POST' });
+      showMsg('#recoveryMsg', 'Link kelola baru: ' + d.manageUrl + ' Teruskan link ini ke pemilik.');
+    } else {
+      await api('/admin/recovery-requests/' + id + '/reject', { method: 'POST' });
+      showMsg('#recoveryMsg', 'Permintaan ditolak.');
+    }
+    loadRecovery(); loadStats();
+  } catch (err) { showMsg('#recoveryMsg', err.message, true); }
+});
+if (key) { $('#adminKey').value = key; $('#loginBtn').click(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+name = "linkpass-api"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "linkpass"
+database_id = "827364c1-cfbd-4445-8d40-8d85e4742b30"
